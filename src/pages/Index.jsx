@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Sidebar from '../components/layout/Sidebar';
 import Dashboard from '../components/Dashboard';
@@ -11,7 +12,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex bg-secondary">
+    <div 
+      className="min-h-screen flex bg-secondary" 
+      onClick={() => {
+        // This empty click handler helps with capturing clicks on the main content
+        // which improves the sidebar hiding behavior
+        // Event already handled by the target, no need to do anything here
+      }}
+    >
       <Sidebar />
       <div className="flex-1 overflow-auto md:ml-64">
         <Dashboard />

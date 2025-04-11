@@ -3,38 +3,38 @@ import * as React from "react";
 const MOBILE_BREAKPOINT = 768;
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(() => {
+    // Ensure window exists (for SSR, default to false)
+    return typeof window !== "undefined" ? window.innerWidth < MOBILE_BREAKPOINT : false;
+  });
 
   React.useEffect(() => {
-    // Set initial value
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    
-    // Create the media query list
+
     const mediaQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    
-    // Define the handler function
     const handleResize = (e) => {
       setIsMobile(e.matches);
     };
-    
-    // Add the event listener
+
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleResize);
     } else {
-      // Fallback for older browsers
       mediaQuery.addListener(handleResize);
     }
-    
-    // Cleanup function
+
     return () => {
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener('change', handleResize);
       } else {
-        // Fallback for older browsers
         mediaQuery.removeListener(handleResize);
       }
     };
   }, []);
 
   return isMobile;
+}
+
+// Opt out of Fast Refresh (HMR) for this non-component module.
+if (import.meta.hot) {
+  import.meta.hot.decline();
 }
